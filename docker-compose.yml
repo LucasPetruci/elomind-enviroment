@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  elomind_web:
+    build:
+      context: ../elomind-web
+    container_name: elomind_web
+    working_dir: /app
+    ports:
+      - 3000:3000
+    volumes:
+      - ../elomind-web:/app
+    command: sh -c "npm install --legacy-peer-deps --verbose && npm run dev"
+
+networks:
+  default:
+    name: elomind_network
