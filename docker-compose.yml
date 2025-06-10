@@ -12,6 +12,39 @@ services:
       - ../elomind-web:/app
     command: sh -c "npm install --legacy-peer-deps --verbose && npm run dev"
 
+  elomind_api:
+    build:
+      context: ../elomind-api
+      dockerfile: server/Dockerfile
+    container_name: elomind_api
+    working_dir: /var/www
+    volumes:
+      - ../elomind-api:/var/www
+    ports:
+      - 8080:8080
+    depends_on:
+      - elomind_db
+    networks:
+      - default
+
+  elomind_db:
+    image: mysql:8.0
+    container_name: elomind_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: elomind
+      MYSQL_USER: elomind
+      MYSQL_PASSWORD: secret
+    ports:
+      - 3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - default
+
+volumes:
+  db_data:
+
 networks:
   default:
     name: elomind_network
